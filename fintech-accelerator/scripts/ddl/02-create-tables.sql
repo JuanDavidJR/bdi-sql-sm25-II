@@ -18,24 +18,25 @@
 -- Table: fintech.REGIONS
 -- Brief: Stores geographical regions for organizing countries
 CREATE TABLE IF NOT EXISTS fintech.REGIONS (
-    region_id VARCHAR(50) PRIMARY KEY,
+    region_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
 -- Table: fintech.COUNTRIES
 -- Brief: Stores country information with currency and region association
 CREATE TABLE IF NOT EXISTS fintech.COUNTRIES (
-    country_code VARCHAR(10) PRIMARY KEY,
+    country_code VARCHAR(3) PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    currency VARCHAR(10) NOT NULL,
-    region_id VARCHAR(50) NULL
+    currency VARCHAR(3) NOT NULL,
+    region_id INT NULL
 );
+
 
 -- Table: fintech.PAYMENT_METHODS
 -- Brief: Reference table for payment method types (e.g., chip, contactless, swipe)
 CREATE TABLE IF NOT EXISTS fintech.PAYMENT_METHODS (
-    method_id VARCHAR(50) PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    method_id SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
 );
 
 -- Table: fintech.CLIENTS
@@ -47,7 +48,7 @@ CREATE TABLE IF NOT EXISTS fintech.CLIENTS (
     last_name VARCHAR(100) NOT NULL,
     gender VARCHAR(10),
     birth_date DATE,
-    email VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     phone VARCHAR(50),
     address VARCHAR(255)
 );
@@ -60,27 +61,27 @@ CREATE TABLE IF NOT EXISTS fintech.ISSUERS (
     bank_code VARCHAR(50) NOT NULL,
     contact_phone VARCHAR(50),
     international BOOLEAN DEFAULT FALSE,
-    country_code VARCHAR(10) NOT NULL
+    country_code VARCHAR(3) NOT NULL
 );
 
 -- Dependent tables
 -- Table: fintech.FRANCHISES
 -- Brief: Credit card brands/networks (e.g., Visa, Mastercard)
 CREATE TABLE IF NOT EXISTS fintech.FRANCHISES (
-    franchise_id VARCHAR(50) PRIMARY KEY,
+    franchise_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     issuer_id VARCHAR(50) NOT NULL,
-    country_code VARCHAR(10) NOT NULL
+    country_code VARCHAR(3) NOT NULL
 );
 
 -- Table: fintech.MERCHANT_LOCATIONS
 -- Brief: Physical or virtual locations where transactions occur
 CREATE TABLE IF NOT EXISTS fintech.MERCHANT_LOCATIONS (
-    location_id VARCHAR(50) PRIMARY KEY,
+    location_id SERIAL PRIMARY KEY,
     store_name VARCHAR(100) NOT NULL,
     category VARCHAR(100) NOT NULL,
     city VARCHAR(100) NOT NULL,
-    country_code VARCHAR(10) NOT NULL,
+    country_code VARCHAR(3) NOT NULL,
     latitude DECIMAL(10,6),
     longitude DECIMAL(10,6)
 );
@@ -93,7 +94,7 @@ CREATE TABLE IF NOT EXISTS fintech.CREDIT_CARDS (
     issue_date DATE NOT NULL,
     expiration_date DATE NOT NULL,
     status VARCHAR(20) NOT NULL,
-    franchise_id VARCHAR(50) NOT NULL
+    franchise_id INT NOT NULL
 );
 
 -- Transactional tables
@@ -103,13 +104,13 @@ CREATE TABLE IF NOT EXISTS fintech.TRANSACTIONS (
     transaction_id VARCHAR(50) PRIMARY KEY,
     card_id VARCHAR(50) NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
-    currency VARCHAR(10) NOT NULL,
+    currency VARCHAR(3) NOT NULL,
     transaction_date TIMESTAMP NOT NULL,
     channel VARCHAR(50) NOT NULL,
     status VARCHAR(20) NOT NULL,
     device_type VARCHAR(50),
-    location_id VARCHAR(50) NOT NULL,
-    method_id VARCHAR(50) NOT NULL
+    location_id INT NOT NULL,
+    method_id INT NOT NULL
 );
 
 -- ##################################################
