@@ -1,0 +1,90 @@
+erDiagram
+
+CLIENTS {
+  string client_id PK
+  string first_name
+  string middle_name
+  string last_name
+  string gender
+  date birth_date
+  string email
+  string phone
+  string address
+}
+
+CREDIT_CARDS {
+  string card_id PK
+  string client_id FK
+  date issue_date
+  date expiration_date
+  string status
+  string franchise_id FK
+}
+
+FRANCHISES {
+  string franchise_id PK
+  string name
+  string issuer_id FK
+  string country_code FK
+}
+
+ISSUERS {
+  string issuer_id PK
+  string name
+  string bank_code
+  string contact_phone
+  boolean international
+  string country_code FK
+}
+
+COUNTRIES {
+  string country_code PK
+  string name
+  string currency
+  string region_id FK
+}
+
+REGIONS {
+  string region_id PK
+  string name  
+}
+
+TRANSACTIONS {
+  string transaction_id PK
+  string card_id FK
+  float amount
+  string currency
+  datetime transaction_date
+  string channel
+  string status
+  string device_type
+  string location_id FK
+  string method_id FK
+}
+
+MERCHANT_LOCATIONS {
+  string location_id PK
+  string store_name
+  string category
+  string city
+  string country_code FK
+  float latitude
+  float longitude
+}
+
+PAYMENT_METHODS {
+  string method_id PK
+  string name
+}
+
+%% Relaciones actualizadas
+CLIENTS ||--o{ CREDIT_CARDS : owns
+CREDIT_CARDS }o--|| FRANCHISES : belongs_to
+FRANCHISES }o--|| ISSUERS : issue_by
+FRANCHISES }o--|| COUNTRIES : origin
+ISSUERS }o--|| COUNTRIES : operates_in
+MERCHANT_LOCATIONS }o--|| COUNTRIES : located_ind
+CREDIT_CARDS ||--o{ TRANSACTIONS : initiates
+TRANSACTIONS }o--|| MERCHANT_LOCATIONS : occurs_at
+TRANSACTIONS }o--|| PAYMENT_METHODS : uses
+COUNTRIES |o--|| REGIONS : belongs_to
